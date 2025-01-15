@@ -21,17 +21,10 @@ silhouette_scores = []
 runtimes_kmeans = []
 
 
-f0 = datanp[:,0] # tous les elements de la premiere colonne
-f1 = datanp[:,1] # tous les elements de la deuxieme colonne
-model = cluster.KMeans(n_clusters=3, init='k-means++')
-model.fit(datanp)
-labels = model.labels_
-plt.figure()
-plt.scatter(f0,f1,c=labels,s=8)
-plt.show()
 
 
-"""
+
+
 for k in range(k_min, k_max + 1):
     print("Calcul pour k = ",k,"...")
 
@@ -72,6 +65,12 @@ plt.xlabel("Nombre de clusters")
 plt.ylabel("Temps de calcul (ms)")
 plt.legend()
 
-plt.show()
 
-"""
+f0 = datanp[:,0] # tous les elements de la premiere colonne
+f1 = datanp[:,1] # tous les elements de la deuxieme colonne
+model = cluster.KMeans(n_clusters=3, init='k-means++')
+model.fit(datanp)
+labels = model.labels_
+plt.figure()
+plt.scatter(f0,f1,c=labels,s=8)
+plt.show()

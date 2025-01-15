@@ -7,9 +7,8 @@ import time
 from sklearn import cluster
 
 # Donnees dans datanp
-print ( "Dendrogramme ’single’ donnees initiales " )
 path = './artificial/'
-databrut = arff.loadarff(open(path+"xclara.arff",'r'))
+databrut = arff.loadarff(open(path+"smile1.arff",'r'))
 datanp = np.array([[x[0] ,x[1]] for x in databrut[0]])
 f0 = datanp[:,0] # tous les elements de la premiere colonne
 f1 = datanp[:,1]
@@ -20,8 +19,7 @@ for linkage in linkage_methods:
     best_score = -1
     best_threshold = None
     best_labels = None
-    k = 3
-    for threshold in np.linspace(0.1, 10, 100):
+    for threshold in np.linspace(0.1, 0, 10):
         tps1 = time.time()
         model = cluster.AgglomerativeClustering(distance_threshold=threshold, linkage=linkage, n_clusters=None)
         model = model.fit(datanp)
