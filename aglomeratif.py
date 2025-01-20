@@ -1,43 +1,52 @@
 import scipy.cluster.hierarchy as shc
 from scipy.io import arff
 import numpy as np
-import matplotlib . pyplot as plt
+import matplotlib.pyplot as plt
 from sklearn.metrics import silhouette_score
 import time
 from sklearn import cluster
 
 # Donnees dans datanp
 path = './artificial/'
-databrut = arff.loadarff(open(path+"smile1.arff",'r'))
+databrut = arff.loadarff(open(path+"zelnik1.arff",'r'))
 datanp = np.array([[x[0] ,x[1]] for x in databrut[0]])
-f0 = datanp[:,0] # tous les elements de la premiere colonne
+f0 = datanp[:,0]
 f1 = datanp[:,1]
 
-linkage_methods = ['single', 'average', 'complete', 'ward']
+methodes = ['single', 'average', 'complete', 'ward']
 
-for linkage in linkage_methods:
+# On boucle sur les différentes méthodes de linkage de clustering agglomeratif
+for linkage in methodes:
+
     best_score = -1
-    best_threshold = None
-    best_labels = None
-    for threshold in np.linspace(0.1, 0, 10):
+
+    # On affiche le dendogramme
+    linked_mat = shc.linkage(datanp, linkage)
+    plt.figure(figsize =( 10 , 10 ) )
+    shc.dendrogram(linked_mat,
+    orientation ='top',
+    distance_sort ='descending',
+    show_leaf_counts = False)
+    plt.show ()
+
+    # On determine ensuite le clustering pour différents treshold
+    for threshold in np.linspace(0.1, 5, 10):
         tps1 = time.time()
         model = cluster.AgglomerativeClustering(distance_threshold=threshold, linkage=linkage, n_clusters=None)
         model = model.fit(datanp)
         tps2 = time.time()
         labels = model.labels_
-        
-        if len(set(labels)) > 1:  # Avoid silhouette_score error with single cluster
+
+        # On détermine à chaque itération si c'est notre meilleur résultat
+        if (len(set(labels)) > 1) : # On rajoute cette condition pour empehcer une erreur à la première itération
             score = silhouette_score(datanp, labels)
             if score > best_score:
                 best_score = score
                 best_threshold = threshold
                 best_labels = labels
-    
-    print(f"Linkage: {linkage}, Best Threshold: {best_threshold:.2f}, Silhouette Score: {best_score:.2f}, Runtime: {round((tps2 - tps1) * 1000, 2)} ms")
-    plt.figure()
+
+    print("Méthode de linkage: " + str(linkage) + ", Meilleur Threshold: " + str(best_threshold) + ", Score de Silhouette: " + str(best_score) + ", Runtime: " + str(round((tps2 - tps1) * 1000, 2)) + " ms")
+    plt.figure(figsize =( 10 , 10 ) )
     plt.scatter(f0, f1, c=best_labels, s=8)
-    plt.title(f"Linkage: {linkage} - Best Threshold: {best_threshold:.2f} - Silhouette Score: {best_score:.2f}")
+    plt.title("Méthode de linkage: " + str(linkage) + ", Meilleur Threshold: " + str(best_threshold) + ", Score de Silhouette: " + str(best_score) + ", Runtime: " + str(round((tps2 - tps1) * 1000, 2)) + " ms")
     plt.show()
-    
-
-

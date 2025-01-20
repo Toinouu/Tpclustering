@@ -1,8 +1,8 @@
 import numpy as np
-import matplotlib . pyplot as plt
+import matplotlib.pyplot as plt
 import time
 from sklearn import cluster
-from scipy . io import arff
+from scipy.io import arff
 from sklearn.metrics import silhouette_score
 #
 # Les donnees sont dans datanp ( 2 dimensions )
@@ -16,14 +16,9 @@ datanp = np.array([[x[0] ,x[1]] for x in databrut[0]])
 
 
 k_min = 2
-k_max =20
+k_max = 20
 silhouette_scores = []
 runtimes_kmeans = []
-
-
-
-
-
 
 for k in range(k_min, k_max + 1):
     print("Calcul pour k = ",k,"...")
@@ -37,11 +32,10 @@ for k in range(k_min, k_max + 1):
 
     labels = model.labels_
 
-    #Coefficient de silhouette
+    # Coefficient de silhouette
     silhouette_avg = silhouette_score(datanp, labels)
     silhouette_scores.append(silhouette_avg)
-    
-    
+
     print("k =", k,"Silhouette = ",round(silhouette_avg, 4),"Runtime KMeans = ",round((tps2 - tps1) * 1000, 2)," ms")
 
 
