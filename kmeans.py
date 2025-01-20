@@ -10,10 +10,9 @@ from sklearn.metrics import silhouette_score
 
 # f1 : valeur sur la deuxieme dimension
 #
-path = './artificial/'
-databrut = arff.loadarff(open(path+"engytime.arff",'r'))
-datanp = np.array([[x[0] ,x[1]] for x in databrut[0]])
-
+path = './dataset-rapport/'
+#databrut = arff.loadarff(open(path+"x1.txt",'r'))
+datanp = np.loadtxt(path + "x4.txt")
 
 k_min = 2
 k_max = 20
@@ -41,6 +40,7 @@ for k in range(k_min, k_max + 1):
 
 plt.figure()
 
+
 # Plot du coefficient de silhouette
 plt.plot(range(k_min, k_max + 1),silhouette_scores)
 plt.xticks(range(k_min, k_max + 1))
@@ -62,7 +62,7 @@ plt.legend()
 
 f0 = datanp[:,0] # tous les elements de la premiere colonne
 f1 = datanp[:,1] # tous les elements de la deuxieme colonne
-model = cluster.KMeans(n_clusters=3, init='k-means++')
+model = cluster.KMeans(n_clusters=15, init='k-means++')
 model.fit(datanp)
 labels = model.labels_
 plt.figure()
